@@ -55,7 +55,7 @@ const mockProducts: MockProduct[] = [
     variant: "Голубые линзы",
     price: 7500,
     currency: "₸",
-    badge: "New",
+    badge: "Новинка",
     tone: "sky",
   },
   {

@@ -7,9 +7,9 @@ export default async function AdminProductEditPage({ params }: Props) {
 
   return (
     <main className="p-8">
-      <h1 className="text-2xl font-semibold text-neutral-900">Редактирование товара</h1>
+      <h1 className="text-2xl font-semibold text-neutral-900">Редактирование линзы</h1>
       <p className="mt-2 text-neutral-600">
-        Товар (id: {id}) — placeholder.
+        Позиция каталога (id: {id}) — заглушка до формы и API.
       </p>
     </main>
   );
