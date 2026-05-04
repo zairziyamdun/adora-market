@@ -2,25 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-
-function CartIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden
-    >
-      <circle cx="9" cy="21" r="1" />
-      <circle cx="20" cy="21" r="1" />
-      <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
-    </svg>
-  );
-}
+import { useCartStore } from "@/store/cart";
 
 function MenuIcon({ className }: { className?: string }) {
   return (
@@ -60,6 +42,7 @@ const navLinks = [
 
 export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const cartCount = useCartStore((s) => s.getTotalItems());
 
   return (
     <header className="sticky top-0 z-50 border-b border-stone-200/70 bg-white/90 backdrop-blur-md">
@@ -90,10 +73,21 @@ export function Navbar() {
         <div className="flex items-center gap-2">
           <Link
             href="/cart"
-            className="inline-flex h-10 w-10 items-center justify-center rounded-full text-stone-700 transition hover:bg-stone-100 hover:text-stone-900 md:h-11 md:w-11"
-            aria-label="Корзина"
+            className="relative inline-flex h-10 w-10 items-center justify-center rounded-full text-stone-700 transition hover:bg-stone-100 hover:text-stone-900 md:h-11 md:w-11"
+            aria-label={
+              cartCount > 0
+                ? `Корзина, товаров: ${cartCount}`
+                : "Корзина"
+            }
           >
-            <CartIcon className="h-5 w-5" />
+            <span aria-hidden className="select-none text-lg leading-none md:text-xl">
+              🛒
+            </span>
+            {cartCount > 0 ? (
+              <span className="absolute -right-0.5 -top-0.5 flex h-[1.125rem] min-w-[1.125rem] items-center justify-center rounded-full bg-red-600 px-1 text-[10px] font-bold leading-none text-white shadow-sm">
+                {cartCount > 99 ? "99+" : cartCount}
+              </span>
+            ) : null}
           </Link>
 
           <button

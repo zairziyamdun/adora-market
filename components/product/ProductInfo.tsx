@@ -85,7 +85,14 @@ export function ProductInfo({ product }: Props) {
       </div>
 
       <div className="mt-10">
-        <AddToCartSection productId={product.id} />
+        <AddToCartSection
+          product={{
+            productId: product.id,
+            name: product.name,
+            price: product.price,
+            quantity: 1,
+          }}
+        />
       </div>
     </div>
   );
