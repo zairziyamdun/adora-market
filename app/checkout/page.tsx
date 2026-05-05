@@ -1,10 +1,13 @@
+import { Footer } from "@/components/ui/Footer";
+import { Navbar } from "@/components/ui/Navbar";
+import { CheckoutContent } from "@/components/checkout/CheckoutContent";
+
 export default function CheckoutPage() {
   return (
-    <main className="p-8">
-      <h1 className="text-2xl font-semibold text-neutral-900">Оформление заказа</h1>
-      <p className="mt-2 text-neutral-600">
-        Оформление заказа линз — заглушка до связки с корзиной и API заказов.
-      </p>
-    </main>
+    <>
+      <Navbar />
+      <CheckoutContent />
+      <Footer />
+    </>
   );
 }
