@@ -27,6 +27,7 @@ export function CheckoutContent() {
   const [values, setValues] = useState<CheckoutFormValues>(initialValues);
   const [errors, setErrors] = useState<CheckoutFormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
 
   const trimmedValues = useMemo(
     () => ({
@@ -79,8 +80,9 @@ export function CheckoutContent() {
     return nextErrors;
   };
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setSubmitError("");
 
     const validationErrors = validate();
     if (Object.keys(validationErrors).length > 0) {
@@ -98,21 +100,38 @@ export function CheckoutContent() {
 
     setIsSubmitting(true);
 
-    const order = {
-      customerName: trimmedValues.customerName,
-      phone: trimmedValues.phone,
-      city: trimmedValues.city,
-      deliveryType: trimmedValues.deliveryType,
-      address:
-        trimmedValues.deliveryType === "delivery" ? trimmedValues.address : "",
-      comment: trimmedValues.comment,
-      items,
-      totalPrice,
-    };
+    try {
+      const order = {
+        customerName: trimmedValues.customerName,
+        phone: trimmedValues.phone,
+        city: trimmedValues.city,
+        deliveryType: trimmedValues.deliveryType,
+        address:
+          trimmedValues.deliveryType === "delivery" ? trimmedValues.address : "",
+        comment: trimmedValues.comment,
+        items,
+        totalPrice,
+      };
 
-    console.log(order);
-    clear();
-    router.push("/order-success");
+      const response = await fetch("/api/orders", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(order),
+      });
+
+      if (!response.ok) {
+        throw new Error("Не удалось оформить заказ");
+      }
+
+      clear();
+      router.push("/order-success");
+    } catch {
+      setSubmitError(
+        "Не удалось сохранить заказ. Проверьте данные и попробуйте еще раз."
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -133,6 +152,11 @@ export function CheckoutContent() {
 
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:gap-12">
           <div className="lg:col-span-7">
+            {submitError ? (
+              <div className="mb-4 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                {submitError}
+              </div>
+            ) : null}
             <CheckoutForm
               values={values}
               errors={errors}
